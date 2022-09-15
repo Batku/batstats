@@ -1,5 +1,5 @@
 <script setup>
-  import { reactive, ref, onBeforeMount, nextTick, onMounted} from 'vue'
+  import { reactive, ref, onBeforeMount, nextTick, onMounted, onUnmounted} from 'vue'
   import axios from 'axios';
   import { useRoute } from 'vue-router';
   import { useRouter } from 'vue-router';
@@ -17,6 +17,13 @@
   function SendTo2(InputUsername2){
     router.push(`/user/${InputUsername2}`)
     setTimeout(function(){ router.go(0); }, 1);
+  }
+
+  function resizeCanv(){
+    if (skinViewer){
+      skinViewer.width = window.innerWidth*0.243;
+      skinViewer.height = window.innerHeight*0.8;
+    }
   }
 
   function getData(username){
@@ -41,7 +48,7 @@
   function renderskin(){
     let skinViewer = new SkinViewer({
     	canvas: document.getElementById("skin_container"),
-      width: 450,
+      width: window.innerWidth*0.243,
     	height: window.innerHeight*0.8,
     	skin: `https://crafatar.com/skins/${userdata.data.uuid}`
     });
@@ -59,7 +66,7 @@
 }
 function runRender(){
   if (userdata.loaded == true) {
-    nextTick(function(){if(userdata.exists == true){renderskin()}});
+    nextTick(function(){if(userdata.exists == true){renderskin();window.addEventListener("resize", resizeCanv());}});
   } else {
     setTimeout(runRender, 15);
   }
@@ -72,6 +79,10 @@ function runRender(){
 
   onMounted(() => {
     runRender();
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener("resize", resizeCanv());
   })
 
   </script>
@@ -93,9 +104,6 @@ function runRender(){
   <div key='User' v-else-if="userdata.exists == true">
     <div class="mainuser">
       <div class="skinimg">
-        <div class="skinName">
-          <span>{{$route.params.username}}</span>
-        </div>
         <canvas id="skin_container"></canvas>
       </div>
     </div>
@@ -123,26 +131,14 @@ html, body {margin: 0; padding: 0}
 #skin_container{
   width: 100%;
   height: 100%;
-  position: absolute;
+  position: relative;
   top: 0;
-}
-.skinName{
-  z-index: 5;
-  font-family: Minecraft;
-  text-align: center;
-  font-size: 30px;
-  top: 2em;
-  font-weight: bold;
-  color:aqua;
-}
-.skinName span::before{
-  content: 'MVP+ ';
-  color: rgb(255, 0, 200);
+  border-radius: 27px;
 }
 .skinimg{
   position: absolute;
   right: 0;
-  width:450px;
+  width: 27%;
   height:100%;
   background-color: rgba(48, 47, 47, 0.493);
   border-radius: 8px;
@@ -151,12 +147,15 @@ html, body {margin: 0; padding: 0}
 }
 .mainuser{
   display: grid;
-  width: 100vw;
+  left: 5vw;
+  right: 5wv;
+  width: 90vw;
   height: 80vh;
   background-color: rgba(85, 63, 99, 0.425);
   place-items: center;
   padding:5%;
   backdrop-filter: blur(7px);
+  border-radius: 27px;
 }
 .main{
   display: grid;
