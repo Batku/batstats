@@ -59,9 +59,8 @@
   font-weight: normal;
 }
 @font-face {
-  font-family: 'Minecraft'; /*a name to be used later*/
-  src: url('/src/assets/Minecraftia-Regular.ttf'); /*URL to font*/
-
+  font-family: 'Minecraft';
+  src: url('/src/assets/Monocraft.otf');
 }
 body {
   min-height: 100vh;

@@ -53,7 +53,7 @@ place-items: center;
 }
 
 .Statbutton {
-  top:-5em;
+
 }
 
 
@@ -61,7 +61,6 @@ place-items: center;
 .form__group {
   position: relative;
   padding: 20px 0 0;
-  margin-top: 10px;
   width: 35%;
 }
 

@@ -4,30 +4,95 @@
   import { useRoute } from 'vue-router';
   import { useRouter } from 'vue-router';
   import { SkinViewer, IdleAnimation } from 'skinview3d';
+import { TextureLoader } from 'three';
 
  
 
   // reactive state
     const route = useRoute();
     const router = useRouter();
-    const userdata = reactive({data:[], exists:true, loaded: false});
+    const userdata = reactive({data:[], exists:true, loaded: false, rank: "", rank_color: "", plus_color: "", plusses: ""});
     const InputUsername2 = ref(route.params.username)
-
+    const colorCodes={
+      '0':'#000000',
+      '1':'#0000AA',
+      '2':'#00AA00',
+      '3':'#00AAAA',
+      '4':'#00AAAA',
+      '5':'#AA00AA',
+      '6':'#FFAA00',
+      '7':'#AAAAAA',
+      '8':'#555555',
+      '9':'#5555FF',
+      'a':'#55FF55',
+      'b':'#55FFFF',
+      'c':'#FF5555',
+      'd':'#FF55FF',
+      'e':'#FFFF55',
+      'f':'#FFFFFF'
+    }
 // functions that mutate state and trigger updates
   function SendTo2(InputUsername2){
     router.push(`/user/${InputUsername2}`)
     setTimeout(function(){ router.go(0); }, 1);
   }
 
-  function resizeCanv(){
-    if (skinViewer){
-      skinViewer.width = window.innerWidth*0.243;
-      skinViewer.height = window.innerHeight*0.8;
+  function getRank(rank, plusColor, rankFormatted){
+    switch(rank){
+      case "MVP_PLUS_PLUS":
+        userdata.rank = '[MVP'
+        userdata.rank_color = colorCodes[rankFormatted.charAt(1)]
+        userdata.plus_color = colorCodes[plusColor.charAt(1)]
+        userdata.plusses = '++'
+        break;
+      case "MVP_PLUS":
+        userdata.rank = '[MVP'
+        userdata.rank_color = colorCodes[rankFormatted.charAt(1)]
+        userdata.plus_color = colorCodes[plusColor.charAt(1)]
+        userdata.plusses = '+'
+        break;
+      case "MVP":
+        userdata.rank = '[MVP'
+        userdata.rank_color = colorCodes[rankFormatted.charAt(1)]
+        userdata.plus_color = colorCodes[plusColor.charAt(1)]
+        break;
+      case "VIP_PLUS":
+        userdata.rank = '[VIP'
+        userdata.rank_color = colorCodes[rankFormatted.charAt(1)]
+        userdata.plus_color = colorCodes[plusColor.charAt(1)]
+        userdata.plusses = '+'
+        break;
+      case "VIP":
+        userdata.rank = '[VIP'
+        userdata.rank_color = colorCodes[rankFormatted.charAt(1)]
+        userdata.plus_color = colorCodes[plusColor.charAt(1)]
+        break;
+      case null:
+      userdata.rank = ''
+        break;
+      case "YOUTUBER":
+        userdata.rank = '['
+        userdata.rank_color = colorCodes[rankFormatted.charAt(1)]
+        userdata.plus_color = '#FFFFFF'
+        userdata.plusses = 'YOUTUBE'
+        break;
+      default:
+        userdata.rank = ''
+        userdata.rank_color = colorCodes[rankFormatted.charAt(1)]
+        userdata.plus_color = colorCodes[plusColor.charAt(1)]
+        break;
     }
+    console.log(userdata.rank)
+  }
+
+  function resizeCanv(skinViewer){
+      nextTick(function(){
+        skinViewer.width = window.innerWidth*0.243;
+        skinViewer.height = window.innerHeight*0.8*0.9;
+      })
   }
 
   function getData(username){
-    console.log(username)
     axios
       .get(`https://api.slothpixel.me/api/players/${username}`)
       .catch(function (error) {
@@ -38,6 +103,7 @@
           userdata.data=response.data;
           userdata.loaded = true;
           console.log(response.data);
+          getRank(response.data.rank, response.data.rank_plus_color, response.data.rank_formatted)
         }
         else{
           userdata.loaded = true;
@@ -49,10 +115,10 @@
     let skinViewer = new SkinViewer({
     	canvas: document.getElementById("skin_container"),
       width: window.innerWidth*0.243,
-    	height: window.innerHeight*0.8,
+    	height: window.innerHeight*0.8*0.9,
     	skin: `https://crafatar.com/skins/${userdata.data.uuid}`
     });
-
+    window.addEventListener("resize", function(){resizeCanv(skinViewer);});
     // Change viewer size
     skinViewer.loadCape(null);
     // Change camera FOV
@@ -66,7 +132,7 @@
 }
 function runRender(){
   if (userdata.loaded == true) {
-    nextTick(function(){if(userdata.exists == true){renderskin();window.addEventListener("resize", resizeCanv());}});
+    nextTick(function(){if(userdata.exists == true){renderskin()}});
   } else {
     setTimeout(runRender, 15);
   }
@@ -106,6 +172,13 @@ function runRender(){
       <div class="skinimg">
         <canvas id="skin_container"></canvas>
       </div>
+      <div class="username">
+        <span :style="{'color': userdata.rank_color}">{{userdata.rank}}</span>
+        <span :style="{'color': userdata.plus_color}">{{userdata.plusses}}</span>
+        <span v-if="userdata.rank != ''" :style="{'color': userdata.rank_color}">] {{userdata.data.username}}</span>
+        <span v-else :style="{'color': userdata.rank_color}">{{userdata.data.username}}</span>
+        <span></span>
+      </div>
     </div>
   </div>
 
@@ -114,7 +187,7 @@ function runRender(){
     <div class="main">
       <div class="form__group field">
         <input required="" placeholder="Name" class="form__field" type="input" v-model="InputUsername2" @keyup.enter="SendTo2(InputUsername2)">
-        <label class="form__label" for="name">Username </label>
+        <label class="form__label" for="name">Username</label>
       </div>
       <label class="unf">User not found</label>
       <div class="Statbutton center">
@@ -128,6 +201,20 @@ function runRender(){
 
 <style scoped>
 html, body {margin: 0; padding: 0}
+.username{
+  bottom: 43%;
+  right: 15%;
+  font-family: Minecraft;
+  font-size: 35px;
+  display: flex;
+  width: 60%;
+  height:13%;
+  background-color: rgba(48, 47, 47, 0.493);
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 27px;
+}
 #skin_container{
   width: 100%;
   height: 100%;
@@ -137,13 +224,14 @@ html, body {margin: 0; padding: 0}
 }
 .skinimg{
   position: absolute;
-  right: 0;
+  right: 3%;
   width: 27%;
-  height:100%;
+  height:90%;
   background-color: rgba(48, 47, 47, 0.493);
   border-radius: 8px;
   justify-content: center;
   align-items: center;
+  border-radius: 27px;
 }
 .mainuser{
   display: grid;
