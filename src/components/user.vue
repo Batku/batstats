@@ -179,6 +179,60 @@ function runRender(){
         <span v-else :style="{'color': userdata.rank_color}">{{userdata.data.username}}</span>
         <span></span>
       </div>
+      <div class="info">
+          <div class="data11 datacontainer">
+            <span class="dataName">Wins</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.wins}}</span>
+          </div>
+          <div class="data12 datacontainer">
+            <span class="dataName">Losses</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.losses}}</span>
+          </div>
+          <div class="data13 datacontainer">
+            <span class="dataName">WLR</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.w_l}}</span>
+          </div>
+
+          <div class="data21 datacontainer">
+            <span class="dataName">Final Kills</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.final_kills}}</span>
+          </div>
+          <div class="data22 datacontainer">
+            <span class="dataName">Final deaths</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.final_deaths}}</span>
+          </div>
+          <div class="data23 datacontainer">
+            <span class="dataName">FKDR</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.final_k_d}}</span>
+          </div>
+
+          <div class="data31 datacontainer">
+            <span class="dataName">Kills</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.kills}}</span>
+          </div>
+          <div class="data32 datacontainer">
+            <span class="dataName">Deaths</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.deaths}}</span>
+          </div>
+          <div class="data33 datacontainer">
+            <span class="dataName">KDR</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.k_d}}</span>
+          </div>
+
+          <div class="data41 datacontainer">
+            <span class="dataName">Beds Broken</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.beds_broken}}</span>
+          </div>
+          <div class="data42 datacontainer">
+            <span class="dataName">Beds Lost</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.beds_lost}}</span>
+          </div>
+          <div class="data43 datacontainer">
+            <span class="dataName">BBLR</span><br>
+            <span class="dataNumber">{{userdata.data.stats.BedWars.bed_ratio}}</span>
+          </div>
+
+      </div>
     </div>
   </div>
 
@@ -201,14 +255,101 @@ function runRender(){
 
 <style scoped>
 html, body {margin: 0; padding: 0}
+.data11{
+  grid-row: 1;
+  grid-column: 1;
+  color: #55FF55;
+}
+.data12{
+  grid-row: 1;
+  grid-column: 2;
+  color: #FF5555;
+}
+.data13{
+  grid-row: 1;
+  grid-column: 3;
+  color: #FF00DC;
+}
+.data21{
+  grid-row: 2;
+  grid-column: 1;
+  color: #55FF55;
+
+}
+.data22{
+  grid-row: 2;
+  grid-column: 2;
+  color: #FF5555;
+}
+.data23{
+  grid-row: 2;
+  grid-column: 3;
+  color: #FF00DC;
+}
+.data31{
+  grid-row: 3;
+  grid-column: 1;
+  color: #55FF55;
+}
+.data32{
+  grid-row: 3;
+  grid-column: 2;
+  color: #FF5555;
+}
+.data33{
+  grid-row: 3;
+  grid-column: 3;
+  color: #FF00DC;
+}
+.data41{
+  grid-row: 4;
+  grid-column: 1;
+  color: #55FF55;
+}
+.data42{
+  grid-row: 4;
+  grid-column: 2;
+  color: #FF5555;
+}
+.data43{
+  grid-row: 4;
+  grid-column: 3;
+  color: #FF00DC;
+}
+.info{
+  display: grid;
+  position: absolute;
+  top: 30%;
+  left: 12%;
+  font-family: Minecraft;
+  font-size: 30px;
+  width: 50%;
+  height:60%;
+  grid-gap: 5%;
+  justify-content: center;
+  align-content: center;
+}
+.dataName{
+  font-size: clamp(0.2rem, -0.875rem + 8.333vw, 1.2rem);
+}
+.datacontainer{
+  width: 13vw;
+  height: 12vh;
+  background-color: rgba(48, 47, 47, 0.493);
+  border-radius: 8px;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+}
 .username{
-  bottom: 43%;
-  right: 15%;
+  position: absolute;
+  top: 11%;
+  left: 12%;
   font-family: Minecraft;
   font-size: 35px;
   display: flex;
-  width: 60%;
-  height:13%;
+  width: 50%;
+  height:11%;
   background-color: rgba(48, 47, 47, 0.493);
   border-radius: 8px;
   justify-content: center;
