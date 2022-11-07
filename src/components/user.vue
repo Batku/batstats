@@ -4,7 +4,6 @@
   import { useRoute } from 'vue-router';
   import { useRouter } from 'vue-router';
   import { SkinViewer, IdleAnimation } from 'skinview3d';
-import { TextureLoader } from 'three';
 
  
 
@@ -31,12 +30,24 @@ import { TextureLoader } from 'three';
       'e':'#FFFF55',
       'f':'#FFFFFF'
     }
+
+    const gameStats = {
+      'wins':'',
+      'losses' : '',
+      'wlr' : '',
+      'kills' : '',
+      'deaths' : '',
+      'kdr' : '',
+      'assists' : '',
+      'games' : '',
+      'souls' : ''
+    }
 // functions that mutate state and trigger updates
   function SendTo2(InputUsername2){
     router.push(`/user/${InputUsername2}`)
     setTimeout(function(){ router.go(0); }, 1);
   }
-
+//ranks
   function getRank(rank, plusColor, rankFormatted){
     switch(rank){
       case "MVP_PLUS_PLUS":
@@ -84,6 +95,69 @@ import { TextureLoader } from 'three';
     }
     console.log(userdata.rank)
   }
+//set mode
+function setMode(mode){
+    switch (mode){
+      case 'SwOa':
+        gameStats.wins = userdata.data.stats.SkyWars.wins;
+        gameStats.losses = userdata.data.stats.SkyWars.losses;
+        gameStats.wlr = userdata.data.stats.SkyWars.win_loss_ratio;
+        gameStats.kills = userdata.data.stats.SkyWars.kills;
+        gameStats.deaths = userdata.data.stats.SkyWars.deaths;
+        gameStats.kdr = userdata.data.stats.SkyWars.kill_death_ratio;
+        gameStats.assists = userdata.data.stats.SkyWars.assists;
+        gameStats.games = userdata.data.stats.SkyWars.games_played;
+        gameStats.souls = userdata.data.stats.SkyWars.souls;
+        console.log(gameStats.souls);
+
+      case 'SwSoloNormal':
+        gameStats.wins = userdata.data.stats.SkyWars.gamemodes.solo_normal.wins;
+        gameStats.losses = userdata.data.stats.SkyWars.gamemodes.solo_normal.losses;
+        gameStats.wlr = userdata.data.stats.SkyWars.gamemodes.solo_normal.win_loss_ratio;
+        gameStats.kills = userdata.data.stats.SkyWars.gamemodes.solo_normal.kills;
+        gameStats.deaths = userdata.data.stats.SkyWars.gamemodes.solo_normal.deaths;
+        gameStats.kdr = userdata.data.stats.SkyWars.gamemodes.solo_normal.kill_death_ratio;
+        gameStats.assists = userdata.data.stats.SkyWars.gamemodes.solo_normal.assists;
+        gameStats.games = userdata.data.stats.SkyWars.gamemodes.solo_normal.games_played;
+        gameStats.souls = userdata.data.stats.SkyWars.gamemodes.solo_normal.souls;
+
+      case 'SwDuoNormal':
+        gameStats.wins = userdata.data.stats.SkyWars.gamemodes.team_normal.wins; 
+        gameStats.losses = userdata.data.stats.SkyWars.gamemodes.team_normal.loss;
+        gameStats.wlr = userdata.data.stats.SkyWars.gamemodes.team_normal.win_los;
+        gameStats.kills = userdata.data.stats.SkyWars.gamemodes.team_normal.kills;
+        gameStats.deaths = userdata.data.stats.SkyWars.gamemodes.team_normal.deat;
+        gameStats.kdr = userdata.data.stats.SkyWars.gamemodes.team_normal.kill_de;
+        gameStats.assists = userdata.data.stats.SkyWars.gamemodes.team_normal.ass;
+        gameStats.games = userdata.data.stats.SkyWars.gamemodes.team_normal.games;
+        gameStats.souls = userdata.data.stats.SkyWars.gamemodes.team_normal.souls;
+
+        case 'SwSoloInsane':
+        gameStats.wins = userdata.data.stats.SkyWars.gamemodes.solo_insane.wins;
+        gameStats.losses = userdata.data.stats.SkyWars.gamemodes.solo_insane.losses;
+        gameStats.wlr = userdata.data.stats.SkyWars.gamemodes.solo_insane.win_loss_ratio;
+        gameStats.kills = userdata.data.stats.SkyWars.gamemodes.solo_insane.kills;
+        gameStats.deaths = userdata.data.stats.SkyWars.gamemodes.solo_insane.deaths;
+        gameStats.kdr = userdata.data.stats.SkyWars.gamemodes.solo_insane.kill_death_ratio;
+        gameStats.assists = userdata.data.stats.SkyWars.gamemodes.solo_insane.assists;
+        gameStats.games = userdata.data.stats.SkyWars.gamemodes.solo_insane.games_played;
+        gameStats.souls = userdata.data.stats.SkyWars.gamemodes.solo_insane.souls;
+
+        case 'SwDuoInsane':
+        gameStats.wins = userdata.data.stats.SkyWars.gamemodes.team_insane.wins;
+        gameStats.losses = userdata.data.stats.SkyWars.gamemodes.team_insane.losses;
+        gameStats.wlr = userdata.data.stats.SkyWars.gamemodes.team_insane.win_loss_ratio;
+        gameStats.kills = userdata.data.stats.SkyWars.gamemodes.team_insane.kills;
+        gameStats.deaths = userdata.data.stats.SkyWars.gamemodes.team_insane.deaths;
+        gameStats.kdr = userdata.data.stats.SkyWars.gamemodes.team_insane.kill_death_ratio;
+        gameStats.assists = userdata.data.stats.SkyWars.gamemodes.team_insane.assists;
+        gameStats.games = userdata.data.stats.SkyWars.gamemodes.team_insane.games_played;
+        gameStats.souls = userdata.data.stats.SkyWars.gamemodes.team_insane.souls;
+    }
+    console.log(gameStats);
+    console.log(userdata.data.stats.SkyWars.souls);
+    console.log(gameStats.souls)
+}
 
   function resizeCanv(skinViewer){
       nextTick(function(){
@@ -174,24 +248,20 @@ function runRender(){
         <a>Skywars</a>
         <menu>
           <menuitem>
-            <a>Overall</a>
-            <menu>
-               <menuitem><a>Normal</a></menuitem>
-               <menuitem><a>Insane</a></menuitem>
-            </menu>  
+            <a @click="setMode('SwOa')">Overall</a>
           </menuitem>
           <menuitem>
             <a>Solos</a>
             <menu>
-               <menuitem><a>Normal</a></menuitem>
-               <menuitem><a>Insane</a></menuitem>
+               <menuitem><a @click="setMode('SwSoloNormal')">Normal</a></menuitem>
+               <menuitem><a @click="setMode('SwSoloInsane')">Insane</a></menuitem>
             </menu>  
           </menuitem>
           <menuitem>
             <a>Doubles</a>
             <menu>
-               <menuitem><a>Normal</a></menuitem>
-               <menuitem><a>Insane</a></menuitem>
+               <menuitem><a @click="setMode('SwDuoNormal')">Normal</a></menuitem>
+               <menuitem><a @click="setMode('SwDuoInsane')">Insane</a></menuitem>
             </menu>  
           </menuitem>
         </menu>
@@ -500,12 +570,9 @@ nav > menu > menuitem menuitem menu {
 /* User Styles Below Not Required */
 
 nav { 
-   margin-top: 40px;
-   margin-left: 40px;
    z-index: 100;
    float:right;
 }
-
 nav a {
    background:#75F;
    color:#FFF;
